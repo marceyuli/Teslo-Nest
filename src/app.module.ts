@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [ConfigModule.forRoot(), 
@@ -16,7 +17,7 @@ import { ProductsModule } from './products/products.module';
               database: process.env.DB_NAME,
               autoLoadEntities: true,
               synchronize: true,
-            }), ProductsModule],
+            }), ProductsModule, CommonModule],
   controllers: [AppController],
   providers: [AppService],
 })
