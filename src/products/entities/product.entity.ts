@@ -51,7 +51,8 @@ export class Product {
         () => ProductImage,
         (productImage) => productImage.product,
         {
-            cascade:true
+            cascade:true,
+            eager:true
         }
     )
     images?: ProductImage[];
