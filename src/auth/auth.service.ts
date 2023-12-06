@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 
@@ -12,6 +14,8 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    private readonly jwtService: JwtService
   ){}
 
   async create(createUserDto: CreateUserDto) {
@@ -24,12 +28,20 @@ export class AuthService {
       });
       await this.userRepository.save(user);
       delete user.password;
-      return user;
-      //Retornar el JWT de acceso
+      return {
+        ...user,
+        token: this.getJwtToken({email: user.email})
+      }
     }
     catch(error){
       this.handleDBError(error);
     }
+  }
+
+  private getJwtToken(payload: JwtPayload) {
+    
+    const token = this.jwtService.sign( payload );
+    return token;
   }
 
   async login(loginUserDto: LoginUserDto){
@@ -48,8 +60,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials (password)');
     }
     
-    return user;
-    //Retornar el JWT de acceso
+    return {
+      ...user,
+      token: this.getJwtToken({email: user.email})
+    }
   }
 
   private handleDBError(error: any): never{
