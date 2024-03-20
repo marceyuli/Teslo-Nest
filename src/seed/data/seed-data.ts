@@ -1,3 +1,4 @@
+import { PwdUtils  } from "src/auth/helpers/password.helper";
 interface SeedProduct {
     description: string;
     images: string[];
@@ -34,13 +35,13 @@ export const initialData: SeedData = {
         {
             email: 'test1@google.com',
             fullName: 'Test One',
-            password: 'ABC123',
+            password: PwdUtils.pwdCrypt('Abc123'),
             roles: ['admin']
         },
         {
             email: 'test2@google.com',
             fullName: 'Test two',
-            password: 'ABC123',
+            password: PwdUtils.pwdCrypt('Abc123'),
             roles: ['user', 'super']
         },
     ],
